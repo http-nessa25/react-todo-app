@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 function TodoForm({ task, setTask, addTask }) {
   return (
@@ -27,9 +27,18 @@ function TodoForm({ task, setTask, addTask }) {
 }
 
 function App() {
-  const [task, setTask] = useState('')
-  const [tasks, setTasks] = useState([])
 
+  const [task, setTask] = useState('')
+
+  const [tasks, setTasks] = useState(() => {
+    const savedTasks = localStorage.getItem('tasks')
+    return savedTasks ? JSON.parse(savedTasks) : []
+  })
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+  }, [tasks])
+  
   function addTask() {
   if (task.trim() === '') {
     return
